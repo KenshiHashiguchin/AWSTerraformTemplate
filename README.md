@@ -63,4 +63,4 @@ terraform apply
   - セキュリティグループ
 - Route53
 - WAF
-- Ki
+- Kinesis
