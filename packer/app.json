@@ -1,0 +1,33 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "profile": "hashiguchi",
+    "region": "ap-northeast-1",
+    "source_ami_filter": {
+      "filters": {
+        "name": "amzn2-ami-ecs-hvm-2.0.*-x86_64-ebs"
+      },
+      "owners": "amazon",
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "ssh_username": "ec2-user",
+    "ami_name": "app-ecs",
+    "encrypt_boot": true
+  }],
+  "provisioners": [{
+    "type": "shell-local",
+    "command": "git archive HEAD --prefix=packer/ -o ./tmp/packer.tar.gz"
+  }, {
+    "type": "file",
+    "source": "./tmp/packer.tar.gz",
+    "destination": "/tmp/packer.tar.gz",
+    "generated": true
+  }, {
+    "type": "shell",
+    "inline": [
+      "tar -zxvf /tmp/packer.tar.gz -C /tmp",
+      "sudo /tmp/packer/bin/mitamae-x86_64-linux local /tmp/packer/roles/app.rb"
+    ]
+  }]
+}
